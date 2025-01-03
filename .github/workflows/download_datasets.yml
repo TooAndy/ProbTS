@@ -21,12 +21,14 @@ jobs:
     # 3. 安装依赖
     - name: Install dependencies
       run: |
-        pip install -r requirements.txt
+        pip install .
+        pip uninstall -y probts
 
     # 4. 下载数据集
     - name: Download ProbTS datasets
       run: |
-        python scripts/data_download.py --all  # 下载所有数据集
+        mkdir data
+        python probts/utils/download_datasets.py --data_path=data # 下载所有数据集
 
     # 5. 安装 cifs-utils 以支持 Samba
     - name: Install cifs-utils
