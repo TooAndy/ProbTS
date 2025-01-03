@@ -29,7 +29,10 @@ jobs:
       run: |
         mkdir data
         python probts/utils/download_datasets.py --data_path=data # 下载所有数据集
-
+        echo "----------------"
+        du -hd 1 data
+        echo "----------------"
+        
     # 5. 安装 cifs-utils 以支持 Samba
     - name: Install cifs-utils
       run: sudo apt-get install -y cifs-utils
