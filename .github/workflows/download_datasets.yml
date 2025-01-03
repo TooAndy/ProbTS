@@ -32,22 +32,15 @@ jobs:
         echo "----------------"
         du -hd 1 data
         echo "----------------"
-        
-    # 5. 安装 cifs-utils 以支持 Samba
-    - name: Install cifs-utils
-      run: sudo apt-get install -y cifs-utils
-
-    # 6. 挂载 NAS 的 Samba 共享目录
-    - name: Mount NAS Samba share
+    # 5. 打包 data 目录并分卷
+    - name: Pack and split data directory
       run: |
-        sudo mkdir -p /mnt/nas
-        sudo mount -t cifs ${{ secrets.SAMBA_SHARE }} /mnt/nas -o username=${{ secrets.SAMBA_USER }},password=${{ secrets.SAMBA_PASSWORD }},port=20445
-    # 7. 将数据集上传到 NAS
-    - name: Upload datasets to NAS
-      run: |
-        sudo rsync -av --progress data /mnt/nas/probts_data
-
-    # 8. 卸载 NAS 的 Samba 共享目录
-    - name: Unmount NAS Samba share
-      run: |
-        sudo umount /mnt/nas
+        tar -cf - data | split -b 500M - data_part_
+     # 6. 上传分卷为 Artifacts
+    - name: Upload split files as Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: probts-data
+        path: |
+          data_part_*
+          
