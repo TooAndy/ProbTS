@@ -21,7 +21,7 @@ jobs:
     # 3. 安装依赖
     - name: Install dependencies
       run: |
-        pip install gdown
+        pip install gdown kagglehub
         # pip uninstall -y probts
 
     # 4. 下载数据集
